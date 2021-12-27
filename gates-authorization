@@ -1,0 +1,60 @@
+app/providers/authserviceprovider
+
+use Illuminate\Support\Facades\Gate;
+ public function boot()
+    {
+        $this->registerPolicies();
+
+        Gate::define('update-question', function ($user,$question){
+            return $user->id === $question->user_id;
+        });
+        Gate::define('delete-question', function ($user,$question){
+
+            return $user->id === $question->user_id;
+        });
+   }
+  controller
+  
+    public function edit(Question $question)
+    {
+        if(Gate::allows('update-question', $question)){
+            return view('questions.edit', compact('question'));
+        }
+        abort(403, "You can't Access this page");
+
+        // if (Gate::denies('update-question', $question)){
+        //     abort(403, "You can't Access this page");
+        // }
+
+        return view('questions.edit', compact('question'));  
+    }
+    
+       public function destroy(Question $question)
+    {
+        if(Gate::allows('delete-question', $question)){
+            $question->delete();
+            return redirect()->route('questions.index')->with('success','Question has been remove');
+        }
+        abort(403, "You can't Access this page"); 
+    }
+    
+    blade.php
+    
+    
+    <div class="d-flex">
+    
+      @can('update-question', $question)
+      <a href="{{ route('questions.edit', $question->id) }}" class="btn btn-sm btn-outline-info"> Edit </a>
+      @endcan
+      
+      @can('delete-question', $question)
+      <form action="{{ route('questions.destroy',$question->id) }}" method="POST" class="form-delete">
+          @method('delete')
+          @csrf
+          <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return comfirm('Are You Sure')"> Delete </button>
+      </form>
+      @endcan
+
+  </div>
+    
+    
