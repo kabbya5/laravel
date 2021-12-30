@@ -1,0 +1,13 @@
+//create new resource route
+php artisan make:controller AnswersController -r -m Answer
+//web.php
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::resource('questions', QuestionController::class)->only([
+    'index','store','update','destory','create'
+]);
+
+Route::get('/questions/{slug}/',[ QuestionController::class,'show'])->name('questions.show');
+Route::resource('questions', QuestionController::class)->except('show');
+Route::resource('questions.answers', AnswerController::class)->except(['index','create','show']);
+Auth::routes();
