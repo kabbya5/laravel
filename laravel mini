@@ -1,0 +1,28 @@
+// middleware create and active 
+php artisan make:middleware AdminMiddleware
+
+//resister middleware in app/Kernel.php in 
+    use App\Http\Middleware\AdminMiddleware;
+  // protected $routeMiddleware
+  'admin' => AdminMiddleware::class,
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+// Route  group 
+Route::group([
+    'prefix'=> 'admin',
+    'namespace'=> "Admin",
+    'middleware'=> ['auth','admin']
+]);
