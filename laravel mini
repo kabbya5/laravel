@@ -7,19 +7,6 @@ php artisan make:middleware AdminMiddleware
   'admin' => AdminMiddleware::class,
   
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
 // Route  group 
 Route::group([
     'prefix'=> 'admin',
