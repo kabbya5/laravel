@@ -5,3 +5,7 @@ public function setTItleAttribute($value){
         $this->attributes['name'] = $value;
         $this->attributes['slug'] = str_slug($value);
     }
+
+// Active Url 
+<li class="{{ (request()->is('admin/cities')) ? 'active' : '' }}">  
+<li class="{{ (request()->segment(2) == 'cities') ? 'active' : '' }}">  
