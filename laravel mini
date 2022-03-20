@@ -15,3 +15,10 @@ Route::group([
 ],function(){
     Route::get('/dashboard',[AdminDashboardController::class,'dashboard'])->name('admin.dashboard');
 });
+
+
+//foreach 
+ @foreach ($categories as $key => $cat)
+    <td class="w-40 text-left bg-white">
+        {{ $key+1 }}
+    </td>
