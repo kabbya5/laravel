@@ -22,3 +22,26 @@ Route::group([
     <td class="w-40 text-left bg-white">
         {{ $key+1 }}
     </td>
+    
+  // Custom Route File  App\Providers\Route Service Providers 
+  
+ public function boot()
+    {
+        $this->configureRateLimiting();
+
+        Route::bind('slug',function($slug){
+            $product = Product::where('slug',$slug)->first();
+            return $product ? $product : abort(404);
+        });
+
+        $this->routes(function () {
+            Route::prefix('api')
+                ->middleware('api')
+                ->namespace($this->namespace)
+                ->group(base_path('routes/api.php'));
+
+            Route::middleware('web')
+                ->namespace($this->namespace)
+                ->group(base_path('routes/web.php'));
+        });
+    }
