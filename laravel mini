@@ -45,3 +45,22 @@ Route::group([
                 ->group(base_path('routes/web.php'));
         });
     }
+    
+    
+    // one to one and one to many relation ship in laravel model
+    
+    public function wishlists(){
+        return $this->hasMany(Wishlist::class);
+    }
+    public function products(){
+        return $this->hasMany(Product::class,'seller_id')
+    }
+public function wishlist(){
+        return $this->hasOne(Wishlist::class);
+    }
+    public function product(){
+        return $this->belongsTo(Product::class);
+    }
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
