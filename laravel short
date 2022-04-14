@@ -9,3 +9,23 @@ public function setTItleAttribute($value){
 // Active Url 
 <li class="{{ (request()->is('admin/cities')) ? 'active' : '' }}">  
 <li class="{{ (request()->segment(2) == 'cities') ? 'active' : '' }}">  
+
+//Auth Check 
+
+     $userid = Auth::id();
+        $check = Wishlist::where('user_id',$userid)->where('product_id',$id)->first();
+
+        if(Auth::check()){
+            if($check){
+                return back()->with('error','Already Has IN your Wishlist');
+            }else{
+                Wishlist::created([
+                    'product_id' => $id,
+                    'user_id' => $userid, 
+                ]);
+            }
+            
+        }else{
+            return back()->with('warning','Login Your Account First');
+        }
+    }
