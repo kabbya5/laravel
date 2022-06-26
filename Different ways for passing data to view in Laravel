@@ -1,0 +1,10 @@
+Using view()
+Using with()
+Using compact()
+Using Controller Class
+
+//1 using view()
+return view('admin.orders.show',
+        [
+            'order' => $order
+]);
