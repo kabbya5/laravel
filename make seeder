@@ -4,5 +4,6 @@ php artisan make:factory PostFactory --model=Post
 
 // Create Seeder 
 
-php artisan make:sedder CategoriesTableSeeder
+php artisan make:seer CategoriesTableSeeder
 
+ php artisan make:seed TableSeeder
