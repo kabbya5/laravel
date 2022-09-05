@@ -18,6 +18,14 @@ some example in factory
             'product_id' => Product::all()->random()->id,
            'slug' => str_slug($brand_name),
            'brand_img' => 'https://source.unsplash.com/random',
+           'title' => rtrim($this->faker->sentence(rand(3,6)),'.'),
+            'excerpt' => $this->faker->paragraphs(rand(3,6),true),
+            'body'  => $this->faker->paragraphs(rand(5, 8), true),
+            'img'=>'https://source.unsplash.com/random',
+            'published_at' => Carbon::today()->subDays(rand(0, 365)),
+
+
+            'view_count' => $this->faker->randomNumber(2,false),
            ]
 
 
