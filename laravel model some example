@@ -1,0 +1,5 @@
+public function getDateAttribute(){
+    return $this->created_at->diffFormHumans();
+}
+
+protected $appends = ['date']; // ro pass vue js date
