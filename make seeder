@@ -15,5 +15,19 @@ some example in factory
  $brand_name = $this->faker->text(12,15);
         return [
             'name' => $brand_name,
+            'product_id' => Product::all()->random()->id,
            'slug' => str_slug($brand_name),
            'brand_img' => 'https://source.unsplash.com/random',
+           ]
+
+
+
+// in databaseseeder 
+
+public function run()
+    {
+        $this->call([
+            UserTableSeeder::class,
+            PostTableSeeder::class,
+        ]);
+    }
