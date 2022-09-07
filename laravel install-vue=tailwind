@@ -1,0 +1,4 @@
+
+install laravel project //
+
+composer create-project laravel/laravel example-app
