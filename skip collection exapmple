@@ -1,0 +1,4 @@
+$posts = Post::take(5)->get();
+        $firstPost = $posts[0];
+        $posts = $posts->skip(1)->take(4);
+        return view('welcome',compact(['posts','firstPost'])); 
