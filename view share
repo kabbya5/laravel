@@ -1,0 +1,30 @@
+ view::share('now',Carbon::today()->format('F d, Y'));
+
+//coustom view share
+
+first create NavigateionComposer.php file in app\view\contents
+
+
+use App\Models\Category;
+use Illuminate\View\View;
+
+class NavigationComposer {
+    public function compose(View $view){
+        $this->composeCategories($view );
+    }
+
+    private function composeCategories(View $view){
+        $categories = Category::all();
+
+        $view->with('categories', $categories);
+
+    }
+}
+
+
+appserviceProvider 
+
+ public function boot()
+    {
+        view()->composer('layouts.navbar', NavigationComposer::class);
+    }
