@@ -14,3 +14,9 @@
       $format = "d/m/Y";
       return $this->created_at->format($format);
     }
+    
+    // week product 
+    $top_rated = DB::table('products')->where('id',$this->id)
+                        ->whereNotNull('top_rated')->whereBetween('updated_at',[
+                            Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()
+                    ])->get();
