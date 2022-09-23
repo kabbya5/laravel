@@ -44,3 +44,17 @@ private function handelRequest($request){
 
 
     }
+    
+    // Intervention Image 
+    $input = $request->except('old_img_path');
+
+        $image = $request->file('img_path');
+
+        if($image){
+            $image_name = hexdec(uniqid()).".".$image->getClientOriginalExtension();
+            \Image::make($image)->resize(350,300)->save(public_path('/media/product/'.$image_name));
+            $input['img_path'] = 'media/product/'.$image_name;
+        }
+
+        Image::create($input);
+    
