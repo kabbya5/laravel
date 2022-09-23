@@ -1,0 +1,13 @@
+// Create Request 
+
+php artisan make:request StorePostRequest
+
+//app/Http/Requests
+
+return [
+            'title'           =>   "required|min:5| max:120",
+            'excerpt'         =>   "required|min:20|max:200",
+            'body'            =>   "required|min:20|max:300",
+            'category_id'     =>   "required",
+            'image'           =>    "mimes:jpg,jpeg,bmp,png"
+        ];
