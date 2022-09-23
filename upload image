@@ -1,0 +1,46 @@
+  protected $uploadPath;
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+
+        $this->uploadPath = public_path('/media/post/');
+    }
+
+
+
+ public function postStore (StorePostRequest $request){
+        $input = $this->handelRequest($request);
+
+        try{
+            Category::findOrFail($input['category_id']);
+            Post::create($input);            
+            return redirect()->route('admin.bashboard')->with('message', "Sussessfully Created Post");
+
+        }catch (ModelNotFoundException $e){
+            throw new CategoryNotFoundException();
+        }
+    }
+    
+    
+
+private function handelRequest($request){
+
+        $input = $request->all();
+        $input['slug'] = str_slug($request->title);
+        $input['author_id'] = Auth::id();
+
+        if($request->hasFile('image'))
+        {
+            $image = $request->file('image');
+            $fileName = $image->getClientOriginalName();
+            $destination = $this->uploadPath;
+
+            $image->move($destination, $fileName);
+            
+            $input['image'] = 'media/post/'.$fileName;
+        }
+        return $input;
+
+
+    }
