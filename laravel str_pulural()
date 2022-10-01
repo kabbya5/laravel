@@ -1,0 +1,13 @@
+ <div class="media-body">
+  <h4 class="media-heading"><a href="{{route('author.posts',$post->author->slug)}}"> {{$post->author->name}}</a></h4>
+  <div class="post-author-count">
+    <a href="{{route('author.posts',$post->author->slug)}}">
+        <i class="fa fa-clone"></i>
+        @php
+        $postCount = $post->author->posts->count()
+        @endphp
+        {{$postCount}} {{str_plural('post',$postCount)}}
+    </a>
+  </div>
+  <p>{!! $post->author->bio_html !!}</p>
+</div>
