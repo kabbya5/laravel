@@ -3,3 +3,7 @@ public function getDateAttribute(){
 }
 
 protected $appends = ['date']; // ro pass vue js date
+
+public function getRouteKeyName(){
+      return "slug";
+}
