@@ -2,3 +2,14 @@
 install laravel project //
 
 composer create-project laravel/laravel example-app
+
+// ui install 
+composer require laravel/ui
+
+// vue js install 
+php artisan ui vue
+
+//taiwind css install 
+
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
