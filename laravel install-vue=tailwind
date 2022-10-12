@@ -13,3 +13,5 @@ php artisan ui vue
 
 npm install -D tailwindcss postcss autoprefixer
 npx tailwindcss init -p
+
+// vue router
