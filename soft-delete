@@ -1,0 +1,31 @@
+Model 
+use HasFactory ,SoftDeletes; 
+
+migration 
+$table->softDeletes(); //down method $table->dropSoftDeletes();
+
+controller 
+$post->delete();
+
+show->blade 
+
+<a href="?status=all"> ALL </a> // all posts
+<a href="?status=trash"> Trash  </a> // only tras post
+
+index-controller 
+ public function index(Request $request){
+        if(($status = $request->get('status')) && $status == 'trash'){
+            $posts = Post::onlyTrashed()->with('author','category')->latest()->paginate($this->limite);
+            $postCount = Post::onlyTrashed()->count();
+            $onlyTrashed = TRUE;
+        }
+        else
+        {
+            $posts = Post::with('author','category')->latest()->paginate($this->limite);
+            $postCount = Post::count();
+            $onlyTrashed = false;
+        }
+
+       
+        return view('blog.Admin.index',compact('posts','postCount','onlyTrashed'));
+  }
