@@ -1,7 +1,0 @@
-  // $viewCount = $post->view_count +1;
-  // $post->update(['view_count' => $viewCount]);
-
-  $post->increment('viewCount',1);
-  
-  Here  We use increment function to increment value 1. 1 is by default parameter. if we want to increment 2 every single click it must will be
-  $post->incremnt(viewCount', 2)
