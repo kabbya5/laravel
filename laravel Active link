@@ -1,1 +1,0 @@
-{{ (request()->segment(2) =='others') ? 'active' : '' }} 
