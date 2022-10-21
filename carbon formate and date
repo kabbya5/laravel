@@ -1,3 +1,0 @@
-{{ $order->created_at->format('g:i A') }} //9:38 PM
-
-{{ $order->created_at->format('m-d-y') }} //06-26-22
