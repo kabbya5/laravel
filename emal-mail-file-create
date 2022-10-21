@@ -1,0 +1,2 @@
+php artisan make:male adminOrderMail 
+//App/Mail/adminOrderMail
