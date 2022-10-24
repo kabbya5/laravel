@@ -1,1 +1,2 @@
 {{ (request()->segment(2) =='others') ? 'active' : '' }} 
+<?php $selected = Request::get('status') == $key ? 'selected-status' : '' ?>
