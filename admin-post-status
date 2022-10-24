@@ -1,0 +1,62 @@
+<div class="flex  justify-around text-blue-600  uppercase">
+            <?php $links = []?>
+            @foreach ($statusList as $key => $value)
+                @if($value)
+                    <?php $selected = Request::get('status') == $key ? 'selected-status' : '' ?>
+                    <a href="?status={{$key}}" class="mx-1 {{ $selected }}"> 
+                        {{$key}} ({{$value}}) 
+                    </a>
+                @endif
+            @endforeach
+            {!! implode('|',$links) !!} 
+        </div>
+
+
+// controller 
+
+ public function index(Request $request)
+    {
+        if (($status = $request->get('status')) && $status == 'trash') {
+            $posts = Post::onlyTrashed()->with('author', 'category')->latest()->paginate($this->limite);
+            $postCount = Post::onlyTrashed()->count();
+            $onlyTrashed = TRUE;
+        } elseif ($status == 'publish') {
+            $posts = Post::published()->with('author', 'category')->latest()->paginate($this->limite);
+            $postCount = Post::published()->count();
+            $onlyTrashed = false;
+        } elseif ($status == 'scheduled') {
+            $posts = Post::scheduled()->with('author', 'category')->latest()->paginate($this->limite);
+            $postCount = Post::scheduled()->count();
+            $onlyTrashed = false;
+        } elseif ($status == 'draft') {
+            $posts = Post::drafted()->with('author', 'category')->latest()->paginate($this->limite);
+            $postCount = Post::drafted()->count();
+            $onlyTrashed = false;
+        } else {
+            $posts = Post::with('author', 'category')->latest()->paginate($this->limite);
+            $postCount = Post::count();
+            $onlyTrashed = false;
+        }
+
+        $statusList = $this->statusList();
+        return view('blog.Admin.index', compact('posts', 'postCount', 'onlyTrashed', 'statusList'));
+    }
+
+    private function statusList()
+    {
+        return [
+            'all' => Post::count(),
+            'publish' => Post::published()->count(),
+            'sheduled'  => Post::scheduled()->count(),
+            'draft'  => Post::drafted()->count(),
+            'trash'    => Post::onlyTrashed()->count(),
+        ];
+    }
+    
+    //query <div class="w-full my-8">
+            @php
+                $links = $posts->appends(Request::query())->render();
+            @endphp
+            {{ $posts->links('pagination::tailwind') }}
+        </div>
+        
