@@ -1,5 +1,14 @@
 // soft delete index view
 
+// pagination 
+
+<div class="w-full my-8">
+            @php
+                $links = $posts->appends(Request::query())->render();
+            @endphp
+            {{ $posts->links('pagination::tailwind') }}
+ </div>
+
 @extends('blog.layouts.backend.main')
 
 
