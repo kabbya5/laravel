@@ -1,0 +1,163 @@
+// soft delete index view
+
+@extends('blog.layouts.backend.main')
+
+
+@section('title')
+    <title> My Block | Dashboard </title>
+@endsection
+
+@section('content')
+    @if (! $posts->count())
+        <div class="bg-red-500 mx-2">
+            <strong class="px-5 py-2">
+                No record found
+            </strong>
+        </div>
+    @endif
+
+    <div class="flex justify-around items-center mx-2 text-white my-4">
+        <a href="{{ route('post.create') }}" class=" bg-blue-800 px-4 py-1 "> Create New  </a>
+        <div class="flex text-slate-800 w-20 justify-around">
+            <a href="?status=all"> ALL </a> |
+            <a href="?status=trash"> Trash  </a>
+        </div>
+    </div>
+    @if ($onlyTrashed)
+    @include('blog.admin._post-trash')
+    @else
+    @include('blog.admin._post-all')
+    @endif
+
+    
+@endsection
+
+//web-route 
+
+Route::get('/new/admin/post/create',[BackendHomeController::class,'createPost'])->name('post.create');
+
+Route::post('/new/admin/post/store',[BackendHomeController::class,'postStore'])->name('post.store');
+
+Route::get('/new/admin/post/edit/{post}',[BackendHomeController::class,'editPost'])->name('post.edit');
+Route::put('/new/admin/post/update/{post}',[BackendHomeController::class,'updatePost'])->name('update.post');
+Route::delete('/new/admin/delete/{post}',[BackendHomeController::class,'destroy'])->name('post.destroy');
+Route::post('/new/admin/restore/{slug}',[BackendHomeController::class,'restorePost'])->name('restore.post');
+Route::delete('/new/admin/post/permanent/delete/{slug}',[BackendHomeController::class,'postPermanentDestroy'])->name('post.permanent.destroy');
+
+
+// Controller 
+
+protected $limite = 5; 
+
+    protected $uploadPath;
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+
+        $this->uploadPath = public_path('/media/post/');
+    }
+    public function index(Request $request){
+        if(($status = $request->get('status')) && $status == 'trash'){
+            $posts = Post::onlyTrashed()->with('author','category')->latest()->paginate($this->limite);
+            $postCount = Post::onlyTrashed()->count();
+            $onlyTrashed = TRUE;
+        }
+        else
+        {
+            $posts = Post::with('author','category')->latest()->paginate($this->limite);
+            $postCount = Post::count();
+            $onlyTrashed = false;
+        }
+
+       
+        return view('blog.Admin.index',compact('posts','postCount','onlyTrashed'));
+    }
+
+    public function createPost(){
+        $post = new Post();
+        return view('blog.admin.post.create',compact('post'));
+    }
+
+    public function postStore (StorePostRequest $request){
+        $input = $this->handelRequest($request);
+
+        unset($input['old_img']);
+        $input['author_id'] = Auth::id();
+
+        try{
+            Category::findOrFail($input['category_id']);
+            Post::create($input);            
+            return redirect()->route('admin.bashboard')->with('message', "Sussessfully Created Post");
+
+        }catch (ModelNotFoundException $e){
+            throw new CategoryNotFoundException();
+        }
+    }
+
+    private function handelRequest($request){
+
+        $input = $request->all();
+        $input['slug'] = str_slug($request->title);
+
+        $old_img = $request->old_img;
+
+        if($request->hasFile('image'))
+        {  
+            if($old_img){
+                unlink($old_img);
+            }
+            $image = $request->file('image');
+            $fileName = $image->getClientOriginalName();
+            $input['image_name'] = $fileName;
+
+            $newFileName = hexdec(uniqid()).".".$image->getClientOriginalExtension();
+            Image::make($image)->resize(400,400)->save(
+                $this->uploadPath.$newFileName
+            );
+
+            $input['image'] = 'media/post/'.$newFileName;
+        }
+        return $input;
+    }
+
+    public function editPost (Post $post){
+        return view('blog.admin.post.edit',compact('post'));
+    }
+
+    public function updatePost(StorePostRequest $request,Post $post){
+        $input = $this->handelRequest($request);
+        unset($input['old_img']);
+
+        try{
+            Category::findOrFail($input['category_id']);
+            $post->update($input);            
+            return redirect()->route('admin.bashboard')->with('message', "Sussessfully Updated");
+
+        }catch (ModelNotFoundException $e){
+            throw new CategoryNotFoundException();
+        }
+    }
+
+    public function destroy(Post $post){
+        $post->delete();
+        return back();
+    }
+
+    public function postPermanentDestroy($slug){
+        $post = Post::withTrashed()->where('slug',$slug)->first();
+        $this->removeImage($post->image);
+        $post->forceDelete();
+        return back();
+    }
+
+    public function restorePost($slug){
+        Post::where('slug',$slug)->withTrashed()->restore();
+        return redirect('new/admin/dashbord?status=trash');
+    }
+
+    private function removeImage($image){
+        if(! empty($image)){
+            if(file_exists($image)) unlink($image);
+        }
+    }
