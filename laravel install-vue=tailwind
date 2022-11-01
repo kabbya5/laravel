@@ -15,3 +15,4 @@ npm install -D tailwindcss postcss autoprefixer
 npx tailwindcss init -p
 
 // vue router
+npm install vue-router@4
