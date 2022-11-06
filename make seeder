@@ -8,6 +8,10 @@ php artisan make:seer CategoriesTableSeeder
 
  php artisan make:seed TableSeeder
 
+php artisan db:seed
+php artisan db:seed --class=UserSeeder
+php artisan migrate:fresh --seed
+php artisan migrate:fresh --seed --seeder=UserSeeder
 
 some example in factory 
 
