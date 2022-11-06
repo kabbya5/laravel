@@ -26,6 +26,11 @@ some example in factory
            'image' => 'https://source.unsplash.com/random',
 
             'view_count' => $this->faker->randomNumber(2,false),
+            'name' => fake()->name(),
+            'last_name' => fake()->name(),
+            'user_name' => fake()->name(),
+            'phone' => fake()->phoneNumber(),
+            'email' => fake()->unique()->safeEmail(),
            ]
 
 
