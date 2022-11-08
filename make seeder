@@ -16,7 +16,7 @@ php artisan migrate:fresh --seed --seeder=UserSeeder
 some example in factory 
 
 
- $brand_name = $this->faker->text(12,15);
+$catName = $this->faker->text(rand(8,30));
         return [
             'name' => $brand_name,
             'product_id' => Product::all()->random()->id,
