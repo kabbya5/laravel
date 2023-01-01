@@ -35,6 +35,7 @@ $catName = $this->faker->text(rand(8,30));
             'user_name' => fake()->name(),
             'phone' => fake()->phoneNumber(),
             'email' => fake()->unique()->safeEmail(),
+            'published_at' => $this->faker->dateTimeBetween('-1 year', '+6 months'),
            ]
 
 
