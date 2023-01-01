@@ -1,0 +1,9 @@
+one to many relationship product vs seller in users
+
+public function seller(){
+        return $this->belongsTo(User::class,'seller_id');
+    }
+    
+    public function products(){
+        return $this->hasMany(Product::class);
+    }
