@@ -1,10 +1,28 @@
+ {
+            \Mail::to('kabbya44@gmail.com')->send(new SendMail($product));
+        }
 
 
 
 
+public function envelope()
+    {
+        return new Envelope(
+            subject: 'Send Mail',
+            from: 'admin@gmai.com',
+        );
+    }
 
 
+public $product;
+    public function __construct($product)
+    {
+        $this->product = $product;
+    }
 
+return new Content(
+            view: 'scheduling.mail',
+        );
 
 
 <!DOCTYPE html>
