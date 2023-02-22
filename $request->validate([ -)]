@@ -4,10 +4,25 @@ php artisan make:request StorePostRequest
 
 //app/Http/Requests
 
-return [
-            'title'           =>   "required|min:5| max:120",
-            'excerpt'         =>   "required|min:20|max:200",
-            'body'            =>   "required|min:20|max:300",
-            'category_id'     =>   "required",
-            'image'           =>    "mimes:jpg,jpeg,bmp,png"
+  $rule = [
+            'product_title' => 'required|min:15|max:250|unique:products',
+            'category_id' => 'required',
+            'images' => 'required',
+            'tags' => 'required|max:7',
+            'price' => 'required', 
+            'short_text' => 'required|min:50|max:500',
+            'quantity' => 'required',  
+            'sizes' => 'required',
+            'colors' => 'required',
         ];
+
+        switch($this->method()){
+            case 'PATCH':
+            case 'PUT':
+                $rule['product_title'] = 'required|min:5|unique:products,product_title,'.$this->product->id;
+        }
+        return $rule;
+$messages = [
+  'required'  => 'The :attribute field is required.',
+  'unique'    => ':attribute is already used'
+];
