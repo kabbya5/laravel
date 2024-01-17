@@ -1,0 +1,33 @@
+public function storeEmployeeDocument(Request $request,Employee $employee){
+    $document = new Document();
+    $document->employee_id = $employee->id;
+    $document->document_title = $request->document_title;
+    [$document->document_path,$document->document_type] = $this->uploadFile('upload/employee-document/',$request->file('employee_document'));
+    $document->save();
+    return back()->with(['alert-type' => 'success','message' => 'Successfully document created']);
+}
+
+private function uploadFile($upload_path,$file){
+    $ext = $file->getClientOriginalExtension();
+    $name = hexdec(uniqid()).'.'.$ext;
+
+    $file->storeAs('public/'.$upload_path, $name);
+    return ['/storage/'.$upload_path.$name, $ext];
+}
+
+public function updateEmployeeDocument(Request $request,Employee $employee,Document $document){
+      $document->employee_id = $employee->id;
+      $document->document_title = $request->document_title;
+      if($request->hasFile('employee_document')){
+          $storage_path = 'app/public/upload/employee-document/';
+          $file = substr($document->document_path,strrpos($document->document_path,'/')+1);
+          if(file_exists(storage_path($storage_path.$file))){
+              unlink(storage_path($storage_path.$file));
+            }
+          [$document->document_path,$document->document_type]  = $this->uploadFile('upload/employee-document/',$request->file('employee_document'));
+      }
+
+      $document->save();
+
+      return back()->with(['alert-type' => 'success','message' => 'Successfully document updated']);
+  }
