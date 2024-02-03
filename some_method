@@ -1,0 +1,12 @@
+protected function getPackageProviders($app){
+    return[
+        FirstPackageServiceProvider::class
+    ];
+}
+
+protected function getPackageALiases($app){
+    return [
+         "FirstPackage" => \App\Package\FirstPackage\Facades\FirstPackage::class
+    ];
+    
+}
