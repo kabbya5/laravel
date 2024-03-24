@@ -1,0 +1,103 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use GuzzleHttp\Client;
+
+class PayPalController extends Controller
+{
+    private $client;
+
+    public function __construct()
+    {
+        $this->client = new Client([
+            'base_uri' => 'https://api.paypal.com', // Use 'https://api.sandbox.paypal.com' for sandbox
+        ]);
+    }
+
+    public function createPayment(Request $request)
+    {
+        $accessToken = $this->getAccessToken();
+        $response = $this->client->post('/v1/payments/payment', [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . $accessToken,
+            ],
+            'json' => [
+                'intent' => 'sale',
+                'redirect_urls' => [
+                    'return_url' => route('payment.success'),
+                    'cancel_url' => route('payment.cancel'),
+                ],
+                'payer' => [
+                    'payment_method' => 'paypal',
+                ],
+                'transactions' => [
+                    [
+                        'amount' => [
+                            'total' => '10.00',
+                            'currency' => 'USD',
+                        ],
+                        'description' => 'Payment description',
+                    ],
+                ],
+            ],
+        ]);
+
+        $payment = json_decode($response->getBody());
+        $approvalUrl = collect($payment->links)->where('rel', 'approval_url')->first()->href;
+
+        return redirect($approvalUrl);
+    }
+
+    public function executePayment(Request $request)
+    {
+        $paymentId = $request->paymentId;
+        $payerId = $request->PayerID;
+        $accessToken = $this->getAccessToken();
+
+        $response = $this->client->post("/v1/payments/payment/{$paymentId}/execute", [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . $accessToken,
+            ],
+            'json' => [
+                'payer_id' => $payerId,
+            ],
+        ]);
+
+        $payment = json_decode($response->getBody());
+
+        if ($payment->state == 'approved') {
+            // Payment was successful
+            // TODO: Handle successful payment
+        } else {
+            // Payment failed
+            // TODO: Handle failed payment
+        }
+
+        return view('payment.status', ['payment' => $payment]);
+    }
+
+    private function getAccessToken()
+    {
+        $response = $this->client->post('/v1/oauth2/token', [
+            'headers' => [
+                'Accept' => 'application/json',
+                'Accept-Language' => 'en_US',
+            ],
+            'auth' => [
+                'client_id', // Your PayPal client ID
+                'secret', // Your PayPal secret
+            ],
+            'form_params' => [
+                'grant_type' => 'client_credentials',
+            ],
+        ]);
+
+        $body = json_decode($response->getBody());
+
+        return $body->access_token;
+    }
+}
