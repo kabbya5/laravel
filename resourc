@@ -7,6 +7,18 @@ Route::resource('questions', QuestionController::class)->only([
     'index','store','update','destory','create'
 ]);
 
+Route::resource('posts', 'PostController', [
+    'names' => [
+        'index' => 'custom.posts.index',
+        'create' => 'custom.posts.create',
+        'store' => 'custom.posts.store',
+        'show' => 'custom.posts.show',
+        'edit' => 'custom.posts.edit',
+        'update' => 'custom.posts.update',
+        'destroy' => 'custom.posts.destroy',
+    ],
+]);
+
 Route::get('/questions/{slug}/',[ QuestionController::class,'show'])->name('questions.show');
 Route::resource('questions', QuestionController::class)->except('show');
 Route::resource('questions.answers', AnswerController::class)->except(['index','create','show']);
