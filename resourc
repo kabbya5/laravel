@@ -18,6 +18,7 @@ Route::resource('posts', 'PostController', [
         'destroy' => 'custom.posts.destroy',
     ],
 ]);
+Route::resource('admin.post','postController');
 
 Route::get('/questions/{slug}/',[ QuestionController::class,'show'])->name('questions.show');
 Route::resource('questions', QuestionController::class)->except('show');
