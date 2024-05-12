@@ -20,3 +20,9 @@
                         ->whereNotNull('top_rated')->whereBetween('updated_at',[
                             Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()
                     ])->get();
+
+//check date is bigger than now.
+public function isActive(){
+        return $this->active_until->gt(now());
+    }
+
