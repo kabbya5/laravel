@@ -18,6 +18,9 @@ Route::resource('posts', 'PostController', [
         'destroy' => 'custom.posts.destroy',
     ],
 ]);
+
+Route::resource('delivery/system','Others\DeliverySystemController')->names('delivery.system');
+
 Route::resource('admin.post','postController');
 
 Route::get('/questions/{slug}/',[ QuestionController::class,'show'])->name('questions.show');
