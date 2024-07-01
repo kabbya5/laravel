@@ -1,0 +1,16 @@
+//image width height with accept ratio  
+
+$image = Image::make($file);
+$image->fit(500, 500, function ($constraint) { 
+    $constraint->aspectRatio();
+});
+
+$path = 'public/upload/produc/' . $imageName;
+Storage::put($path, (string) $image->encode());
+
+// Resize Image 
+
+  $image->resize($width, $height, function ($constraint) {
+        $constraint->aspectRatio();
+        $constraint->upsize();
+    });
