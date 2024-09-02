@@ -31,7 +31,18 @@
         @error('tag_id')
             <p class="text-red-500 text-sm">{{ $message }}</p>
         @enderror
-        
+        <div class="form-group">
+    <label for="config-name"> Select Category </label>
+    <select name="category_ids[]" class="common-select2 form-control" multiple required>
+        <option value="">Select Category</option>
+        @foreach($categories as $category)
+            <option value="{{ $category->id }}"
+                @if(in_array($category->id, old('category_ids', $selectedCategories ?? []))) selected @endif>
+                {{ $category->name }}
+            </option>
+        @endforeach
+    </select>
+</div>
   // script for taginput  
   
   @section('script')
